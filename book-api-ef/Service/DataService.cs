@@ -117,6 +117,42 @@ public class DataService
     }
     
     // Giv votes
+    public bool UpvotePost(int id)
+    {
+        var post = db.Posts.FirstOrDefault(p => p.PostId == id);
+        if (post == null) return false; // Posten findes ikke (ikke muligt at upvote)
+        post.Votes++; // Plusser 1 vote til nuværende antal votes
+        db.SaveChanges();
+        return true;
+    }
+
+    // Samme metode, men minuser votes
+    public bool DownvotePost(int id)
+    {
+        var post = db.Posts.FirstOrDefault(p => p.PostId == id);
+        if (post == null) return false;
+        post.Votes--;
+        db.SaveChanges();
+        return true;
+    }
     
+    public bool UpvoteComment(int postId, int commentId)
+    {
+        var comment = db.Comments.FirstOrDefault(c => c.PostId == postId && c.CommentId == commentId); // Finder post og kommentar pr id
+        if (comment == null) return false;
+        comment.Votes++;
+        db.SaveChanges();
+        return true;
+    }
+    
+    // Samme metode, men minuser votes på kommentar
+    public bool DownvoteComment(int postId, int commentId)
+    {
+        var comment = db.Comments.FirstOrDefault(c => c.PostId == postId && c.CommentId == commentId);
+        if (comment == null) return false;
+        comment.Votes--;
+        db.SaveChanges();
+        return true;
+    }
 
 }
