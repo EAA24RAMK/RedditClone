@@ -18,7 +18,7 @@ builder.Services.AddCors(options =>
 });
 
 // Tilføj DbContext factory som service.
-builder.Services.AddDbContext<BookContext>(options =>
+builder.Services.AddDbContext<RedditContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("ContextSQLite")));
 
 // Tilføj DataService så den kan bruges i endpoints
@@ -57,37 +57,101 @@ app.Use(async (context, next) =>
 
 
 // DataService fås via "Dependency Injection" (DI)
+// GET endpoints
 app.MapGet("/", (DataService service) =>
 {
     return new { message = "Hello World!" };
 });
 
-app.MapGet("/api/books", (DataService service) =>
+app.MapGet("/api/posts", (DataService service) =>
 {
-    return service.GetBooks().Select(b => new { 
-        bookId = b.BookId, 
-        title = b.Title, 
-        author = new {
-            b.Author.AuthorId, b.Author.Fullname
-        } 
+    var posts = service.GetPosts()
+        .Select(p => new 
+        { 
+            p.PostId, 
+            p.Title, 
+            p.Url, 
+            p.Text, 
+            p.AuthorName, 
+            p.CreatedAt, 
+            p.Votes,
+            commentsCount = p.Comments.Count
+        });
+
+    return Results.Ok(posts);
+});
+
+app.MapGet("/api/posts/{id}", (DataService service, int id) =>
+{
+    var post = service.GetPost(id);
+    if (post == null) return Results.NotFound(new { message = "Posten findes ikke." });
+
+    return Results.Ok(new
+    {
+        post.PostId,
+        post.Title,
+        post.Url,
+        post.Text,
+        post.AuthorName,
+        post.CreatedAt,
+        post.Votes,
+        commentsCount = post.Comments.Select(c => new
+        {
+            c.CommentId,
+            c.Text,
+            c.AuthorName,
+            c.CreatedAt,
+            c.Votes
+        })
     });
 });
 
-app.MapGet("/api/authors", (DataService service) =>
+// POST endpoints
+app.MapPost("/api/posts", (DataService service, NewPostData data) =>
 {
-    return service.GetAuthors().Select(a => new { a.AuthorId, a.Fullname });
+    var post = service.CreatePost(data.Title, data.Text, data.Url, data.AuthorName);
+    return Results.Created($"/api/posts/{post.PostId}", post);
 });
 
-app.MapGet("/api/authors/{id}", (DataService service, int id) => {
-    return service.GetAuthor(id);
+app.MapPost("/api/posts/{id}/comments", (DataService service, int id, NewCommentData data) =>
+{
+    var comment = service.CreateComment(id, data.Text, data.AuthorName);
+    if (comment == null) return Results.NotFound(new { message = "Posten findes ikke." });
+    
+    return Results.Created($"/api/posts/{id}/comments/{comment.CommentId}", comment);
 });
 
-app.MapPost("/api/books", (DataService service, NewBookData data) =>
+// PUT endpoints
+app.MapPut("/api/posts/{id}/upvote", (DataService service, int id) =>
 {
-    string result = service.CreateBook(data.Titel, data.AuthorId);
-    return new { message = result };
+    return service.UpvotePost(id)
+        ? Results.Ok()
+        : Results.NotFound(new { message = "Posten findes ikke." });
+});
+
+app.MapPut("/api/posts/{id}/downvote", (DataService service, int id) =>
+{
+    return service.DownvotePost(id)
+        ? Results.Ok()
+        : Results.NotFound(new { message = "Posten findes ikke." });
+});
+
+app.MapPut("/api/posts/{postid}/comments/{commentid}/upvote", (DataService service, int postid, int commentid) =>
+{
+    return service.UpvoteComment(postid, commentid)
+        ? Results.Ok()
+        : Results.NotFound(new { message = "Posten findes ikke." });
+});
+
+app.MapPut("/api/posts/{postid}/comments/{commentid}/downvote", (DataService service, int postid, int commentid) =>
+{
+    return service.DownvoteComment(postid, commentid)
+        ? Results.Ok()
+        : Results.NotFound(new { message = "Posten findes ikke." });   
 });
 
 app.Run();
 
-record NewBookData(string Titel, int AuthorId);
+// Record datamodeller til post metoder
+record NewPostData(string Title, string? Text, string? Url, string AuthorName);
+record NewCommentData(string Text, string AuthorName);
