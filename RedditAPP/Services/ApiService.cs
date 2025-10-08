@@ -30,13 +30,13 @@ public class ApiService
         return await http.GetFromJsonAsync<Post>($"{baseAPI}posts/{id}");
     }
 
-    public async Task<Post?> CreatePost(string title, string? text, string? url, string authorName)
+    public async Task<Post?> CreatePost(string title, string? url, string? text, string authorName)
     {
         var payload = new
         {
             title,
-            text,
             url,
+            text,
             authorName
         };
         

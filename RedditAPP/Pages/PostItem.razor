@@ -2,7 +2,7 @@
 Notice how this route has a route parameter 'id'. This is how we can pass data to the route.
 See how the links are made in 'PostList.razor'.
 -->
-@page "/post/{id:int}"
+@page "/post/{id}"
 
 @using RedditAPP.Data;
 @using Model;
@@ -70,7 +70,8 @@ else
 @code {
     [Parameter]
     public string Id { get; set; }
-    public int PostId { get { return int.Parse(Id); } }
+
+    public int PostId => int.Parse(Id);
     public Post? Post { get; set; }
 
     protected override async Task OnInitializedAsync()

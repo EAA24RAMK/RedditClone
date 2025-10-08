@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace TodoApi.Migrations
+namespace RedditAPI.Migrations
 {
     [DbContext(typeof(RedditContext))]
-    [Migration("20251005113007_InitialRedditCreate")]
+    [Migration("20251007093257_InitialRedditCreate")]
     partial class InitialRedditCreate
     {
         /// <inheritdoc />

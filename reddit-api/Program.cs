@@ -25,7 +25,6 @@ builder.Services.AddDbContext<RedditContext>(options =>
 builder.Services.AddScoped<DataService>();
 
 // Dette kode kan bruges til at fjerne "cykler" i JSON objekterne.
-/*
 builder.Services.Configure<JsonOptions>(options =>
 {
     // Her kan man fjerne fejl der opstår, når man returnerer JSON med objekter,
@@ -34,7 +33,6 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.ReferenceHandler = 
         System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
-*/
 
 var app = builder.Build();
 
@@ -95,7 +93,7 @@ app.MapGet("/api/posts/{id}", (DataService service, int id) =>
         post.AuthorName,
         post.CreatedAt,
         post.Votes,
-        commentsCount = post.Comments.Select(c => new
+        comments = post.Comments.Select(c => new
         {
             c.CommentId,
             c.Text,
@@ -153,5 +151,5 @@ app.MapPut("/api/posts/{postid}/comments/{commentid}/downvote", (DataService ser
 app.Run();
 
 // Record datamodeller til post metoder
-record NewPostData(string Title, string? Text, string? Url, string AuthorName);
+record NewPostData(string Title, string? Url, string? Text, string AuthorName);
 record NewCommentData(string Text, string AuthorName);

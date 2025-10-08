@@ -8,6 +8,8 @@
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 
+<CreatePost OnPostCreated="ReloadPosts" />
+
 @if (posts == null)
 {
     <p><em>Loading...</em></p>
@@ -79,5 +81,10 @@ else
         {
             posts = await apiService.GetPosts(); // opdaterer listen
         }
+    }
+
+    private async Task ReloadPosts()
+    {
+        posts = await apiService.GetPosts();
     }
 }

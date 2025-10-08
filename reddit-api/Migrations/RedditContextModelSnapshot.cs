@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace TodoApi.Migrations
+namespace RedditAPI.Migrations
 {
     [DbContext(typeof(RedditContext))]
     partial class RedditContextModelSnapshot : ModelSnapshot
