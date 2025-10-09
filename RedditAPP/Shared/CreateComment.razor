@@ -1,0 +1,36 @@
+@using RedditAPP.Data;
+@using Model;
+@inject ApiService apiService
+
+<div>
+    <br/>
+    <h3>Write a comment</h3>
+    <input placeholder="Your name" type="text" @bind="authorName" />
+    <br/>
+    <input placeholder="Comment text" type="text" @bind="text" />
+    <br/>
+    <button type="button" @onclick="CreateNewComment">Post comment</button>
+</div>
+
+@code {
+    // PostId is passed in from the parent component. See how in PostItem.razor.
+    [Parameter]
+    public int PostId { get; set; }
+    private string? authorName;
+    private string? text;
+    
+    private async Task CreateNewComment()
+    {
+        if (string.IsNullOrWhiteSpace(text) || string.IsNullOrWhiteSpace(authorName))
+            return;
+
+        var newComment = await apiService.CreateComment(PostId, text, authorName);
+
+        if (newComment != null)
+        {
+            // Rydder input felter efter post
+            text = string.Empty;
+            authorName = string.Empty;
+        }
+    }
+}

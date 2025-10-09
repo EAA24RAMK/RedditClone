@@ -1,0 +1,46 @@
+@using Model;
+@using RedditAPP.Data;
+@inject ApiService apiService
+
+<div class="create-post">
+    <h3>Create a Post</h3>
+    
+    <input placeholder="Title" @bind="title" />
+    <br/>
+    <input placeholder="Link (optional)" @bind="url" />
+    <br/>
+    <textarea placeholder="Text (optional)" @bind="text"></textarea>
+    <br/>
+    <input placeholder="Your name" @bind="authorName"/>
+    <br/>
+    <button @onclick="CreateNewPost">Create Post</button>
+    <br/>
+</div>
+
+@code {
+    private string? title;
+    private string? url;
+    private string? text;
+    private string? authorName;
+    
+    [Parameter]
+    public EventCallback OnPostCreated { get; set; }
+
+    private async Task CreateNewPost()
+    {
+        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(authorName))
+            return;
+
+        var newPost = await apiService.CreatePost(title!, url, text, authorName!);
+        
+        // Ryd felterne
+        title = string.Empty;
+        url = string.Empty;
+        text = string.Empty;
+        authorName = string.Empty;
+        
+        // Fortæl parent at post skal reloaedes
+        await OnPostCreated.InvokeAsync();
+    }
+
+}

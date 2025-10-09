@@ -1,0 +1,90 @@
+﻿@page "/"
+@inherits LayoutComponentBase
+
+@using RedditAPP.Data;
+@using Model;
+@inject ApiService apiService
+
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<CreatePost OnPostCreated="ReloadPosts" />
+
+@if (posts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table>
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Content</th>
+            <th>Votes</th>
+            <th colspan="2">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var post in posts)
+        {
+            <tr>
+                <!-- Link til PostItem.razor -->
+                <td><a href="/post/@post.PostId">@post.Title</a></td>
+                <!-- 
+                    These a href links will match the route in the page 'PostItem.razor'.
+                    The route is defined as "/post/{id}" and the id is the post id.
+                -->
+                <!-- Viser content, text hvis text, ellers url hvis url -->
+                <td>
+                    @if (!string.IsNullOrEmpty(post.Text))
+                    {
+                        @post.Text
+                    }
+                    else if (!string.IsNullOrEmpty(post.Url))
+                    {
+                        <a href="@post.Url" target="_blank">@post.Url</a>
+                    }
+                </td>
+                <td>@post.Votes</td>
+                <td><button @onclick="() => Upvote(post.PostId)">Upvote</button></td>
+                <td><button @onclick="() => Downvote(post.PostId)">Downvote</button></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <br/>
+}
+
+@code {
+    private List<Post>? posts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        posts = await apiService.GetPosts();
+    }
+
+    private async Task Upvote(int postId)
+    {
+        var success = await apiService.UpvotePost(postId);
+        if (success)
+        {
+            posts = await apiService.GetPosts(); // henter listen igen for at opdatere
+        }
+    }
+
+    private async Task Downvote(int postId)
+    {
+        var success = await apiService.DownvotePost(postId);
+        if (success)
+        {
+            posts = await apiService.GetPosts(); // opdaterer listen
+        }
+    }
+
+    private async Task ReloadPosts()
+    {
+        posts = await apiService.GetPosts();
+    }
+}
