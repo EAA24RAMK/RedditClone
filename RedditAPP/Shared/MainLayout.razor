@@ -1,4 +1,13 @@
-﻿@inherits LayoutComponentBase
+﻿@inject NavigationManager navManager
+@inherits LayoutComponentBase
+
+<div class="main-header">
+    <img src="images/reddit-logo.png"
+         alt="Reddit Logo"
+         class="logo"
+         style="cursor: pointer;"
+         @onclick='() => navManager.NavigateTo("/")' />
+</div>
 
 <div class="page">
     <main>

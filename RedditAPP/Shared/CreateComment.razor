@@ -2,15 +2,25 @@
 @using Model;
 @inject ApiService apiService
 
-<div>
-    <br/>
+<style>
+div.create-comment {
+  background-color: #f2f0eb;
+  width: 600px;
+  border: 2px solid #452d3d;
+  padding: 10px;
+  margin-top: 20px;
+}
+</style>
+
+<div class="create-comment">
     <h3>Write a comment</h3>
     <input placeholder="Your name" type="text" @bind="authorName" />
-    <br/>
+    <p></p>
     <input placeholder="Comment text" type="text" @bind="text" />
-    <br/>
+    <p></p>
     <button type="button" @onclick="CreateNewComment">Post comment</button>
 </div>
+<p></p>
 
 @code {
     // PostId is passed in from the parent component. See how in PostItem.razor.

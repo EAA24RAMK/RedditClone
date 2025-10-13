@@ -1,3 +1,26 @@
+.main-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f2f0eb;
+    border-bottom: 2px solid #452d3d;
+}
+
+.logo {
+    height: 100px;
+    transition: transform 0.2s ease-in-out;
+}
+
+.logo:hover {
+    transform: scale(1.1);
+}
+
+
+.page-content {
+    padding: 20px;
+}
+
 .page {
     position: relative;
     display: flex;
