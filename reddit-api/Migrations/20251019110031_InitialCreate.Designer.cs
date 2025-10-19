@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace RedditAPI.Migrations
 {
     [DbContext(typeof(RedditContext))]
-    [Migration("20251007093257_InitialRedditCreate")]
-    partial class InitialRedditCreate
+    [Migration("20251019110031_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

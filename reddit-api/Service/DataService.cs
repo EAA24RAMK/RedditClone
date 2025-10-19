@@ -24,43 +24,129 @@ public class DataService
         {
             var post1 = new Post
             {
-                Title = "Velkommen til vores Reddit!",
-                Text = "Det her er den første post",
-                AuthorName = "Admin",
+                Title = "Velkommen til det nye Reddit!",
+                Text = "Det her er det første post",
+                AuthorName = "Rasmus",
                 CreatedAt = DateTime.UtcNow,
-                Votes = 3
+                Votes = 5
             };
 
             var post2 = new Post
             {
                 Title = "Tjek denne side ud!!!!",
                 Url = "https://dotnet.microsoft.com",
+                AuthorName = "Alfred",
+                CreatedAt = DateTime.UtcNow.AddMinutes(-5),
+                Votes = 7
+            };
+            
+            var post3 = new Post
+            {
+                Title = "Tjek Blazor ud!!!!",
+                Text = "Blazor er bare fedt!",
+                AuthorName = "Kasper",
+                CreatedAt = DateTime.UtcNow.AddMinutes(-10),
+                Votes = 3
+            };
+            
+            var post4 = new Post
+            {
+                Title = "Har lige lært EF / Enity Framework, wow en oplevelse",
+                Text = "En meget nem måde at arbejde med databaser i .NET",
+                AuthorName = "Elias",
+                CreatedAt = DateTime.UtcNow.AddMinutes(-20),
+                Votes = 6
+            };
+            
+            var post5 = new Post
+            {
+                Title = "Det her Reddit er meget bedre end Facebook",
+                Url = "https://facebook.com",
+                AuthorName = "Lars",
+                CreatedAt = DateTime.UtcNow.AddMinutes(-30),
+                Votes = 10
+            };
+            
+            var post6 = new Post
+            {
+                Title = "Har i set det rigtige Reddit? Synes de er lidt foran på design delen",
+                Url = "https://reddit.com",
                 AuthorName = "Rasmus",
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow.AddMinutes(-45),
+                Votes = 7
+            };
+            
+            var post7 = new Post
+            {
+                Title = "C# er top lækkert",
+                Text = "Mit ynglingssprog!",
+                AuthorName = "Dorthe",
+                CreatedAt = DateTime.UtcNow.AddMinutes(-60),
+                Votes = 7
+            };
+            
+            var post8 = new Post
+            {
+                Title = "Har i prøvet at oprette et post her på?",
+                Text = "Jeg synes det er super nemt",
+                AuthorName = "John",
+                CreatedAt = DateTime.UtcNow.AddMinutes(-75),
                 Votes = 5
             };
             
-            db.Posts.AddRange(post1, post2);
+            var post9 = new Post
+            {
+                Title = "Der er kommet en ny opdatering til Visual Studio",
+                Text = "Synes det er dårligt",
+                AuthorName = "Preben",
+                CreatedAt = DateTime.UtcNow.AddMinutes(-90),
+                Votes = 1
+            };
+            
+            var post10 = new Post
+            {
+                Title = "Tak for modtagelsen af vores Reddit",
+                Text = "Vi takker endnu en gang",
+                AuthorName = "Rasmus",
+                CreatedAt = DateTime.UtcNow.AddMinutes(-120),
+                Votes = 5
+            };
+            
+            db.Posts.AddRange(post1, post2, post3, post4, post5, post6, post7, post8, post9, post10);
             db.SaveChanges();
             
-            // Tilføjer nogle kommentarer
-            db.Comments.Add(new Comment
+            // Tilføjer to kommentarer til hvert post
+            void AddComments(Post post, string author1, string text1, string author2, string text2)
             {
-                PostId = post1.PostId,
-                Text = "Godt gået!",
-                AuthorName = "Kasper",
-                CreatedAt = DateTime.UtcNow,
-                Votes = 2
-            });
+                db.Comments.Add(new Comment
+                {
+                    PostId = post.PostId,
+                    Text = text1,
+                    AuthorName = author1,
+                    CreatedAt = DateTime.UtcNow.AddMinutes(-2),
+                    Votes = 2
+                });
 
-            db.Comments.Add(new Comment
-            {
-                PostId = post1.PostId,
-                Text = "Ser spændende ud",
-                AuthorName = "Alfred",
-                CreatedAt = DateTime.UtcNow,
-                Votes = 1
-            });
+                db.Comments.Add(new Comment
+                {
+                    PostId = post.PostId,
+                    Text = text2,
+                    AuthorName = author2,
+                    CreatedAt = DateTime.UtcNow.AddMinutes(-1),
+                    Votes = 1
+                });
+            }
+            
+            AddComments(post1, "Kasper", "Godt gået!", "John", "Ser spændende ud");
+            AddComments(post2, "Alfred", "Tak for linket", "John", "En god side fra Microsoft");
+            AddComments(post3, "Kim", "Har også brugt meget Blazor", "Jimmy", "Anbefaler ikke Blazor");
+            AddComments(post4, "Alfred", "Et super værktøj", "John", "Vil jeg også anbefale");
+            AddComments(post5, "John", "Er også godt træt af Facebook", "Iben", "Denne side er meget bedre.");
+            AddComments(post6, "Albert", "Nej, synes jeres UI er bedre", "Lars", "Det her er nemmere at forholde sig til");
+            AddComments(post7, "Karsten", "Ja det er super", "Jim", "Super lækkert programmeringssprog");
+            AddComments(post8, "Anders", "Giver dig ret, det fungerer bare", "Kim", "Er ikke så teknisk");
+            AddComments(post9, "John", "Har ikke opdateret endnu", "Vincent", "Jeg er fan");
+            AddComments(post10, "John", "Selv tak", "Kasper", "Det er os der takker");
 
             db.SaveChanges();
         }

@@ -28,7 +28,8 @@ else
 {
     <div class="contents">
         <h4>@Post.Title</h4>
-        <p><strong>User: @Post.AuthorName, Votes: @Post.Votes</strong></p>
+        <p><strong>User: @Post.AuthorName</strong></p>
+        <p><strong>Votes: @Post.Votes</strong></p>
         
         @if (!string.IsNullOrEmpty(Post.Text))
         {
