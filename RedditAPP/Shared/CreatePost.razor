@@ -2,19 +2,29 @@
 @using RedditAPP.Data;
 @inject ApiService apiService
 
+<style>
+div.create-post {
+  background-color: #f2f0eb;
+  width: 600px;
+  border: 2px solid #452d3d;
+  padding: 10px;
+  margin-top: 20px;
+}
+</style>
+
 <div class="create-post">
     <h3>Create a Post</h3>
     
     <input placeholder="Title" @bind="title" />
-    <br/>
+    <p></p>
     <input placeholder="Link (optional)" @bind="url" />
-    <br/>
+    <p></p>
     <textarea placeholder="Text (optional)" @bind="text"></textarea>
-    <br/>
+    <p></p>
     <input placeholder="Your name" @bind="authorName"/>
-    <br/>
+    <p></p>
     <button @onclick="CreateNewPost">Create Post</button>
-    <br/>
+    <p></p>
 </div>
 
 @code {
