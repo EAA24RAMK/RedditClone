@@ -4,6 +4,7 @@
 - **Rasmus Møller Kristensen**  
 - **Alfred Juhl Walther**
 - **Elias Liebman**
+- **Kasper Jørgensen**
 
 ---
 
